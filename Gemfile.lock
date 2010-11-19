@@ -33,17 +33,28 @@ GEM
     autotest (4.4.4)
     autotest-rails (4.1.0)
       ZenTest
+    bson (1.1.2)
     builder (2.1.2)
     diff-lcs (1.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     i18n (0.4.2)
+    jnunemaker-validatable (1.8.4)
+      activesupport (>= 2.3.4)
     mail (2.2.10)
       activesupport (>= 2.3.6)
       i18n (~> 0.4.1)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.16)
+    mongo (1.1.2)
+      bson (>= 1.1.1)
+    mongo_mapper (0.8.6)
+      activesupport (>= 2.3.4)
+      jnunemaker-validatable (~> 1.8.4)
+      plucky (~> 0.3.6)
+    plucky (0.3.6)
+      mongo (~> 1.1)
     polyglot (0.3.1)
     rack (1.2.1)
     rack-mount (0.6.13)
@@ -87,6 +98,7 @@ PLATFORMS
 DEPENDENCIES
   autotest
   autotest-rails
+  mongo_mapper
   rails (= 3.0.3)
   rspec (~> 2.0.0)
   rspec-rails (~> 2.0.1)
