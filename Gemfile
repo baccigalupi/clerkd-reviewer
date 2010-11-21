@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.0.3'
+gem 'bson_ext'
 gem "mongo_mapper"
 
 # Bundle edge Rails instead:
