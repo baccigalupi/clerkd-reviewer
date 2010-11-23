@@ -1,10 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-#   last_last_login_at: "2009-03-12 22:54:49", 
-#   last_login_at: "2009-03-19 23:23:24", 
-#   sex: nil, 
-#   birthday: nil, 
-
 describe User do
   it 'should be a Model' do
     User.ancestors.include?(Model).should be_true
@@ -23,23 +18,25 @@ describe User do
       
       it 'is required' do
         @user.valid?.should be_false
-        @user.errors_on(:username).should_not be_nil
-        @user.errors_on(:username).first.should == "username required"
+        @user.errors[:username].should_not be_empty
+        @user.errors[:username].first.should == "is required"
       end
       
       it 'should not allow spaces' do
         @user.username = "Bob Johnson"
         @user.valid?.should be_false
-        @user.errors_on(:username).should_not be_nil
-        @user.errors_on(:username).first.should == 'username should be only letters and numbers with so spaces or special characters'
+        @user.errors[:username].should_not be_nil
+        @user.errors[:username].first.should == 'should be only letters and numbers with so spaces or special characters'
       end
       
       it 'should not allow CGI escapable characters' do
         @user.username = "Bob/"
         @user.valid?.should be_false
-        @user.errors_on(:username).should_not be_nil
-        @user.errors_on(:username).first.should == 'username should be only letters and numbers with so spaces or special characters'
+        @user.errors[:username].should_not be_nil
+        @user.errors[:username].first.should == 'should be only letters and numbers with so spaces or special characters'
       end
+      
+      # what about unicode? probably not for this app
     end
     
     describe 'email' do
@@ -63,7 +60,18 @@ describe User do
     it 'is an array'
     it 'is an empty array by default'
     
-    describe 'has_permission?([roles, array])' do
+    describe 'role=' do
+      it 'adds a role to role'
+      it 'will not add a role that is not real'
+      it 'cannot be set with the create attributes'
+      it 'cannot be set with update attributes'
+    end
+    
+    describe 'admin?' do
+      it 'is true for ??'
+    end
+    
+    describe 'is?' do
       pending 'waiting to see how we need to use roles'
     end
   end
@@ -80,6 +88,9 @@ describe User do
         it 'sets the expiration to the default period for the token type'
         it 'alternately sets the expiration to the value passed in'
       end
+    end
+    
+    describe 'lost password token' do
     end
     
     describe '#find_by_token(code, type=RememberToken)' do
