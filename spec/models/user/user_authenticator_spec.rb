@@ -9,6 +9,37 @@ describe 'User Authetication' do
         User::RememberToken
       )
     end
+    
+    describe 'authentication' do
+      describe 'authenticate( password )' do
+        it 'returns the user if the password encypts correctly'
+        it 'returns false if the password does not encrypt correctly'
+      end
+
+      describe 'self.authenticate(login, password)' do
+        it 'returns nil if a user is not found'
+        it 'returns false if the user is not authenticated'
+        it 'returns the user if the password authenticates'
+      end
+    end
+    
+    describe 'authenticators' do
+      it 'is a Hash'
+
+      describe '#remember!' do
+        it 'adds a RememberToken to the authenticators'
+        it 'sets the token'
+      end
+      
+      describe '#forget!' do
+        it 'emptys the token'
+      end
+      
+      describe 'password=' do
+        it 'it puts a Password authenticator into authenticators'
+        it 'it sets the Password object'
+      end
+    end
   end
   
   describe User::Password do

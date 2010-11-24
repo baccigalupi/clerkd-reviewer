@@ -169,46 +169,4 @@ describe User do
       end
     end
   end
-  
-  describe 'tokens' do
-    it 'is a Hash'
-    
-    describe 'remember token' do
-      it 'is a Token'
-      it 'corresponds to the :remember key in tokens'
-      
-      describe '#remember!' do
-        it 'sets the token code'
-        it 'sets the expiration to the default period for the token type'
-        it 'alternately sets the expiration to the value passed in'
-      end
-    end
-    
-    describe 'lost password token' do
-    end
-    
-    describe '#find_by_token(code, type=RememberToken)' do
-      it 'returns the found user if the token has not expired'
-      it 'returns nil if no user corresponds to that token'
-      it 'returns nil if the token has expired'
-    end
-  end
-  
-  describe 'authentication' do
-    describe 'password=' do
-      it 'sets the salt if there is none'
-      it 'encrypts the password'
-    end
-    
-    describe 'authenticate( password )' do
-      it 'returns the user if the password encypts correctly'
-      it 'returns false if the password does not encrypt correctly'
-    end
-    
-    describe 'self.authenticate(login, password)' do
-      it 'returns nil if a user is not found'
-      it 'returns false if the user is not authenticated'
-      it 'returns the user if the password authenticates'
-    end
-  end
 end
