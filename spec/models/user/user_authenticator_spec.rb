@@ -2,14 +2,6 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe 'User Authetication' do
   describe Authentication, 'Module' do
-    it 'keeps track of authenticators' do
-      User::AUTHENTICATORS.should include(
-        User::Password,
-        User::VerificationToken,
-        User::RememberToken
-      )
-    end
-    
     describe 'authentication' do
       describe 'authenticate( password )' do
         it 'returns the user if the password encypts correctly'
@@ -17,6 +9,7 @@ describe 'User Authetication' do
       end
 
       describe 'self.authenticate(login, password)' do
+        it 'finds a user by login (username or email)'
         it 'returns nil if a user is not found'
         it 'returns false if the user is not authenticated'
         it 'returns the user if the password authenticates'
@@ -24,15 +17,50 @@ describe 'User Authetication' do
     end
     
     describe 'authenticators' do
-      it 'is a Hash'
-
+      before do
+        @user = User.new
+      end
+      
+      it 'has a place to store some' do
+        @user.authenticators.should == []
+      end
+      
       describe '#remember!' do
-        it 'adds a RememberToken to the authenticators'
-        it 'sets the token'
+        it 'adds a RememberToken to the authenticators' do
+          @user.authenticators.should be_empty
+          @user.remember!
+          @user.authenticators[:remember].should_not be_nil
+          @user.authenticators[:remember].class.should == RememberToken
+        end
+        
+        it 'sets the token' do
+          @user.remember!
+          @user.authenticators[:remember].code.should_not be_nil
+          @user.authenticators[:remember].expires_at.should be_close(
+            Time.now + RememberToken::PERIOD, 
+            10.seconds
+          )
+        end
+        
+        it 'saves the token' do
+          @user.stub!(:valid?).and_return(true)
+          @user.remember!
+          @user.reload
+          @user.authenticators[:remember].should_not be_nil
+        end
+        
+        it 'returns the code' do
+          @user.remember!.is_a?(String).should be_true
+        end
       end
       
       describe '#forget!' do
-        it 'emptys the token'
+        it 'removes the token' do
+          @user.remember!
+          @user.authenticators[:remember].should_not be_nil
+          @user.forget!
+          @user.authenticators[:remember].should be_nil
+        end
       end
       
       describe 'password=' do
@@ -44,7 +72,7 @@ describe 'User Authetication' do
   
   describe User::Password do
     before do
-      @password = User::Password.new
+      @password = Password.new
     end
     
     describe 'initialize' do
@@ -54,7 +82,7 @@ describe 'User Authetication' do
       end
       
       it 'will set the accessor when options are passed in' do
-        password = User::Password.new(:salt => 'my_salt', :encryption => 'encrypted')
+        password = Password.new(:salt => 'my_salt', :encryption => 'encrypted')
         password.salt.should == 'my_salt'
         password.encryption.should == 'encrypted'
       end
@@ -84,9 +112,9 @@ describe 'User Authetication' do
     end
   end
   
-  describe User::Token do
+  describe Token do
     before do
-      @token = User::Token.new
+      @token = Token.new
     end
     
     describe 'initialize' do
@@ -96,7 +124,7 @@ describe 'User Authetication' do
       end
       
       it 'will set the accessor when options are passed in' do
-        token = User::Token.new(:code => 'my_code', :expires_at => Time.parse('1/1/1970'))
+        token = Token.new(:code => 'my_code', :expires_at => Time.parse('1/1/1970'))
         token.code.should == 'my_code'
         token.expires_at.should == Time.parse('1/1/1970')
       end
@@ -113,6 +141,10 @@ describe 'User Authetication' do
       
       it 'sets the expries at time' do
         @token.expires_at.should be_close( Time.now + 2.weeks, 10.seconds ) 
+      end
+      
+      it 'returns a token object' do
+        @token.set.class.should == Token
       end
     end
     
