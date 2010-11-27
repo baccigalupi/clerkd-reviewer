@@ -3,6 +3,7 @@ class User < Model
   key :username
   key :email
   key :roles, Array
+  key :name_object, User::Name
   
   timestamps!
   
@@ -47,5 +48,9 @@ class User < Model
   
   def is?(*array)
     (roles & array).size > 0
+  end
+  
+  def name=(n)
+    self[:name_object] = Name.parse(n)
   end
 end
