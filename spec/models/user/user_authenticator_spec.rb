@@ -64,13 +64,24 @@ describe 'User Authetication' do
       end
       
       describe 'password=' do
-        it 'it puts a Password authenticator into authenticators'
-        it 'it sets the Password object'
+        it 'it puts a Password authenticator into authenticators' do
+          @user.authenticators.should be_empty
+          @user.password = 'password'
+          @user.authenticators[:password].should_not be_nil
+          @user.authenticators[:password].class.should == Password
+        end
+        
+        it 'it sets the Password object' do
+          @user.password = 'password'
+          @user.authenticators[:password].salt.should_not be_nil
+          @user.authenticators[:password].encryption.should == 
+            @user.authenticators[:password].encrypt_password('password')
+        end
       end
     end
   end
   
-  describe User::Password do
+  describe Password do
     before do
       @password = Password.new
     end
@@ -102,12 +113,21 @@ describe 'User Authetication' do
       it 'encrypts the password' do
         @password.encryption.should == @password.encrypt_password('password')
       end
+      
+      it 'returns the Pasword object' do
+        @password.set('password').should == @password
+      end
     end
     
     describe 'authentication' do
       it 'should work with the correct password' do
         @password.set('password')
         @password.authenticate('password').should == true
+      end
+      
+      it 'should return false if the password is not correct' do
+        @password.set('password')
+        @password.authenticate('not the password').should == false
       end
     end
   end

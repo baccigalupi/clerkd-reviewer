@@ -13,8 +13,9 @@ class Password < Authenticator
   end
   
   def set( password )
-    self.salt = encrypt("--#{object_id}--#{Time.now}--")
+    self.salt = encrypt( "--#{object_id}--#{Time.now}--" )
     self.encryption = encrypt_password( password )
+    self
   end
   
   def authenticate( password )
@@ -86,6 +87,10 @@ module Authentication
     def forget!
       self.authenticators.delete(authenticators[:remember])
       self.save
+    end
+    
+    def password=( p )
+      self.authenticators << Password.new.set( p )
     end
   end
   
