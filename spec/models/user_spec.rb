@@ -80,14 +80,6 @@ describe User do
         @user.updated_at.should be_close(original_date + 1.day, 10.seconds)
       end
     end
-    
-    describe 'name' do
-      it 'is a User::Name'
-      it 'sets with #name='
-      it 'has a first_name'
-      it 'has a display_name'
-      it 'name allows access to the name object'
-    end
   end
   
   describe 'roles' do

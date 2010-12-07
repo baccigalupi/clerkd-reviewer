@@ -24,13 +24,25 @@ class User
           end
         end
       else
-        array = string.split(',')
-        name.first = array.last
-        name.last = array.first
+        if string.include?(',')
+          array = string.split(',')
+          name.first = array.last
+          name.last = array.first
+        else
+          name.first = string
+        end
       end
       name
     end
   
+    def full_name
+        if middle ==  nil && last == nil
+          full = "#{first}"
+        else
+          full = "#{first} #{middle} #{last}"
+        end
+        full
+    end
   end
 end
 

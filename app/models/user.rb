@@ -53,4 +53,8 @@ class User < Model
   def name=(n)
     self[:name_object] = Name.parse(n)
   end
+  
+  def name
+    name_object ? name_object.full_name : ''
+  end
 end

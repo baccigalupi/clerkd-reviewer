@@ -67,6 +67,35 @@ describe User::Name do
         User::Name.parse(@string).middle.should == 'Mercedes Anahi Alexandra'
       end
     end
+    
+    describe 'only one word as name' do
+      it 'should set it as the first name' do
+        name = User::Name.parse('bob')
+        name.first.should == 'bob'
+        name.middle.should == nil
+        name.last.should == nil
+      end
+    end
+  end
+  
+  describe '#full_name' do
+    it 'should include the first middle and last name' do
+      @string1 = 'Sonia Mercedes Bain'
+      name = User::Name.parse(@string1)
+      name.full_name.should == @string1
+    end
+    
+    it 'should not have extra spaces if there is no middle name' do
+      @string2 = 'Kane Baccigalupi'
+      name = User::Name.parse(@string2)
+      name.full_name.should == @string2
+    end
+    
+    it 'should not have extra spaces if there is no last name' do
+      @string3 = 'Adolfo'
+      name = User::Name.parse(@string3)
+      name.full_name.should == @string3
+    end
   end
   
   describe 'mongoing' do
@@ -74,11 +103,23 @@ describe User::Name do
       User::Name.new.is_a?(MongoMapper::EmbeddedDocument).should be_true
     end
     
-    it 'should be a field in the user object' do
+    it 'should have a setter on the user object' do
       user = User.new
       user.name = 'Fito von Zastrow'
       user.name_object.class.should == User::Name
     end
+    
+    it 'should have a getter on the user object' do
+      user = User.new
+      user.name = 'Fito von Zastrow'
+      user.name.should == 'Fito von Zastrow'
+    end
+    
+    it 'should be an empty string if there is no name object' do
+      user = User.new
+      user.name.should == ''
+    end
+    
     
     it 'should persist name attributes' do
       user = User.new(:username => 'fito', :email => 'adolfovon@gmail.com', :name => 'Fito von Zastrow')
