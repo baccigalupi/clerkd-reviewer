@@ -42,6 +42,7 @@ describe UsersController do
     end
   end
 
+  # WRITES ---------------------
   describe "POST /users (create)" do
     describe "with valid params" do
       it "assigns a newly created user as @user" do

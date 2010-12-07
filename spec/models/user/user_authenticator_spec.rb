@@ -52,6 +52,16 @@ describe 'User Authetication' do
         it 'returns the code' do
           @user.remember!.is_a?(String).should be_true
         end
+        
+        describe 'avoiding duplication' do
+          it 'will not add duplicate RemeberToken to authenticators' do
+            @user.remember!
+            @user.remember!
+            @user.authenticators.select{|a| a.class == RememberToken}.size.should == 1
+          end
+          
+          it ''
+        end
       end
       
       describe '#forget!' do
@@ -71,11 +81,26 @@ describe 'User Authetication' do
           @user.authenticators[:password].class.should == Password
         end
         
-        it 'it sets the Password object' do
+        it 'sets the Password object' do
           @user.password = 'password'
           @user.authenticators[:password].salt.should_not be_nil
           @user.authenticators[:password].encryption.should == 
             @user.authenticators[:password].encrypt_password('password')
+        end
+        
+        describe 'setting multiple times' do
+          it 'should not duplicate the password object in authenticators' do
+            @user.password = 'password'
+            @user.password = 'new password'
+            @user.authenticators.select{|a| a.class == Password }.size.should == 1
+          end
+        
+          it 'should set the existing password object with the new password' do
+            @user.password = 'password'
+            @user.password = 'new password'
+            @user.authenticators[:password].encryption.should == 
+              @user.authenticators[:password].encrypt_password('new password')
+          end
         end
       end
     end
