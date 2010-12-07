@@ -7,41 +7,23 @@ class User
     key :middle, String
     
     def self.parse(string)
-      name = new
-      if string.include?(' ')
-        array = string.split(' ')
-        if string.include?(',')
-          name.first = array.last
-          name.last = array.first.chop
-        else
-          if array.size > 2 
-            name.first = array.first
-            name.middle = array.slice(1, ((array.size) - 2)).join(' ')
-            name.last = array.last
-          else  
-            name.first = array.first
-            name.last = array.last
-          end
-        end
+      opts = if string.include?(',')
+        name_array = string.split(',')
+        name_array = name_array.map{|str| str.split(' ')}.flatten
+        last = name_array.shift
+        {:first => name_array.pop, :last => last}
       else
-        if string.include?(',')
-          array = string.split(',')
-          name.first = array.last
-          name.last = array.first
-        else
-          name.first = string
-        end
+        name_array = string.split(' ')
+        {:first => name_array.shift, :last => name_array.pop}
       end
-      name
+      
+      opts[:middle] = name_array.join(' ') if name_array.size > 0
+      
+      new(opts)
     end
   
     def full_name
-        if middle ==  nil && last == nil
-          full = "#{first}"
-        else
-          full = "#{first} #{middle} #{last}"
-        end
-        full
+      "#{first}#{middle ? ' ' + middle : ''}#{last ? ' ' + last : ''}"
     end
   end
 end
