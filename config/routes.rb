@@ -14,7 +14,10 @@ Reviewer::Application.routes.draw do
   #   resources :products
   
   resources :users
+  
   resource :session
+  match 'login',  :to => 'sessions#new',     :as => "login"
+  match 'logout', :to => 'sessions#destroy', :as => "logout"
 
   # Sample resource route with options:
   #   resources :products do
