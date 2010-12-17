@@ -60,7 +60,12 @@ describe 'User Authetication' do
             @user.authenticators.select{|a| a.class == RememberToken}.size.should == 1
           end
           
-          it ''
+          it 'should change the code in the remember token' do
+            @user.remember!
+            remember = @user.authenticators[:remember].dup
+            @user.remember!
+            @user.authenticators[:remember].code.should_not == remember.code
+          end
         end
       end
       
