@@ -27,11 +27,13 @@ gem "mongo_mapper"
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
-group :test do
+group :test, :development do
   gem "rspec", "~> 2.0.0"
   gem "rspec-rails", "~> 2.0.1"
   gem "autotest"
   gem "autotest-rails"
+  
+  gem 'open_gem'
   # gem "cucumber",         :git => "git://github.com/aslakhellesoy/cucumber.git"
   # gem "database_cleaner", :git => 'git://github.com/bmabey/database_cleaner.git'
   # gem "cucumber-rails",   :git => "git://github.com/aslakhellesoy/cucumber-rails.git"

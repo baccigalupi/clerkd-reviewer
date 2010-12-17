@@ -36,12 +36,16 @@ GEM
     bson (1.1.2)
     bson_ext (1.1.2)
     builder (2.1.2)
+    configuration (1.2.0)
     diff-lcs (1.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     i18n (0.4.2)
     jnunemaker-validatable (1.8.4)
       activesupport (>= 2.3.4)
+    launchy (0.3.7)
+      configuration (>= 0.0.5)
+      rake (>= 0.8.1)
     mail (2.2.10)
       activesupport (>= 2.3.6)
       i18n (~> 0.4.1)
@@ -54,6 +58,8 @@ GEM
       activesupport (>= 2.3.4)
       jnunemaker-validatable (~> 1.8.4)
       plucky (~> 0.3.6)
+    open_gem (1.4.2)
+      launchy (~> 0.3.5)
     plucky (0.3.6)
       mongo (~> 1.1)
     polyglot (0.3.1)
@@ -101,6 +107,7 @@ DEPENDENCIES
   autotest-rails
   bson_ext
   mongo_mapper
+  open_gem
   rails (= 3.0.3)
   rspec (~> 2.0.0)
   rspec-rails (~> 2.0.1)

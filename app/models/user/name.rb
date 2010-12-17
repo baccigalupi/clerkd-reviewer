@@ -11,7 +11,7 @@ class User
         name_array = string.split(',')
         name_array = name_array.map{|str| str.split(' ')}.flatten
         last = name_array.shift
-        {:first => name_array.pop, :last => last}
+        {:first => name_array.shift, :last => last}
       else
         name_array = string.split(' ')
         {:first => name_array.shift, :last => name_array.pop}
