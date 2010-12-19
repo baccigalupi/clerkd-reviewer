@@ -8,10 +8,6 @@ class Password < Authenticator
   key :salt, String 
   key :encryption, String
   
-  def empty?
-    salt && encryption
-  end
-  
   def set( password )
     self.salt = encrypt( "--#{object_id}--#{Time.now}--" )
     self.encryption = encrypt_password( password )
@@ -51,8 +47,12 @@ end
 class RememberToken < Token; end
 
 class VerificationToken < Token
-  DELAY = 24.hours
+  PERIOD = 24.hours
 end
+
+
+
+
 
 module Authentication
   AUTHENTICATOR_KEY_MAP = {
@@ -79,7 +79,8 @@ module Authentication
     end
     
     def remember!
-      self.authenticators << RememberToken.new.set
+      self.authenticators << RememberToken.new unless authenticators[:remember]
+      authenticators[:remember].set
       self.save
       authenticators[:remember].code
     end
@@ -90,7 +91,9 @@ module Authentication
     end
     
     def password=( p )
-      self.authenticators << Password.new.set( p )
+      self.authenticators << Password.new unless authenticators[:password]
+      authenticators[:password].set(p)
+      self.save
     end
   end
   
