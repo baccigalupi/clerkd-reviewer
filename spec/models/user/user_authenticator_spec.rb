@@ -114,6 +114,10 @@ describe 'User Authetication' do
           it 'should change the code in the remember token' do
             @user.remember!
             remember = @user.authenticators[:remember].dup
+            
+            time = Time.now
+            Time.stub!(:now).and_return(time + 3.minutes)
+            
             @user.remember!
             @user.authenticators[:remember].code.should_not == remember.code
           end

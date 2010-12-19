@@ -33,7 +33,7 @@ group :test, :development do
   gem "autotest"
   gem "autotest-rails"
   
-  gem 'open_gem'
+  # gem 'open_gem'
   # gem "cucumber",         :git => "git://github.com/aslakhellesoy/cucumber.git"
   # gem "database_cleaner", :git => 'git://github.com/bmabey/database_cleaner.git'
   # gem "cucumber-rails",   :git => "git://github.com/aslakhellesoy/cucumber-rails.git"
