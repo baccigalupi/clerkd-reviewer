@@ -3,16 +3,67 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe 'User Authetication' do
   describe Authentication, 'Module' do
     describe 'authentication' do
-      describe 'authenticate( password )' do
-        it 'returns the user if the password encypts correctly'
-        it 'returns false if the password does not encrypt correctly'
-      end
-
-      describe 'self.authenticate(login, password)' do
-        it 'finds a user by login (username or email)'
-        it 'returns nil if a user is not found'
-        it 'returns false if the user is not authenticated'
-        it 'returns the user if the password authenticates'
+      describe 'self.authenticate(opts)' do
+        it 'calls authenticate_by_password' do
+          User.should_receive(:authenticate_by_password)
+          User.authenticate({})
+        end
+        
+        it 'calls authenticate_by_remember' do
+          User.should_receive(:authenticate_by_remember)
+          User.authenticate({})
+        end
+        
+        it 'should not call authenticate_by_remember if authenticate_by_password works' do
+          User.should_not_receive(:authenticate_by_remember)
+          User.should_receive(:authenticate_by_password).and_return( User.new )
+          User.authenticate({})
+        end
+          
+        describe 'self.authenticate_by_password' do
+          before do
+            @user = User.new(:password => 'password')
+          end
+          
+          it 'returns nil if there is not a :login option' do
+            User.authenticate_by_password({:password => 'where is the login'}).should == nil
+          end
+          
+          it 'should search for a user when provided a :login option' do
+            User.should_receive(:first).and_return(@user)
+            User.authenticate_by_password(:login => 'my_login')
+          end
+          
+          describe 'will find a user by' do
+            it 'username' do
+              User.should_receive(:first).with(:username => 'kane').and_return(@user)
+              User.authenticate(:login => 'kane')
+            end
+            
+            it 'email' do
+              User.should_receive(:first).with(:username => 'baccigalupi@gmail.com').ordered.and_return(nil)
+              User.should_receive(:first).with(:email => 'baccigalupi@gmail.com').ordered.and_return(@user)
+              User.authenticate(:login => 'baccigalupi@gmail.com')
+            end
+          end
+          
+          describe 'when a user is found' do
+            before do
+              User.should_receive(:first).and_return(@user)
+              @params = {:login => 'kane', :password => 'password'}
+            end
+            
+            it 'calls #authenticate on the user\'s password object' do
+              @user.authenticators[:password].should_receive(:authenticate).and_return(@user)
+              User.authenticate_by_password(@params)
+            end
+            
+            it 'passes #authenticate the :password option it receives' do
+              @user.authenticators[:password].should_receive(:authenticate).with(@params[:password]).and_return(@user)
+              User.authenticate_by_password(@params)
+            end
+          end
+        end
       end
     end
     

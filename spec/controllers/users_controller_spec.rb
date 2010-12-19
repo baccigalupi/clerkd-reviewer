@@ -7,7 +7,6 @@ describe UsersController do
     end
   end
   
-  # READS ---------------------
   describe 'GET /users (index)' do
     it "assigns all users as @users to the view" do
       User.stub(:all) { [mock_user] }
@@ -41,7 +40,6 @@ describe UsersController do
     end
   end
 
-  # WRITES ---------------------
   describe "POST /users (create)" do
     describe "with valid params" do
       it "assigns a newly created user as @user" do

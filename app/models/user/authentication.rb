@@ -95,7 +95,18 @@ module Authentication
   end
   
   module ClassMethods
-    def authenticate()
+    def authenticate(opts)
+      authenticate_by_password(opts) ||
+      authenticate_by_remember(opts) 
+    end
+    
+    def authenticate_by_password(opts)
+      if opts[:login] && user = User.first(:username => opts[:login]) || User.first(:email => opts[:login])
+        user.authenticators[:password].authenticate(opts[:password])
+      end
+    end
+    
+    def authenticate_by_remember(opts)
     end
   end
 end
